@@ -1,129 +1,225 @@
-'''
-Current extended solution is added as a sample which consists checks to exclude the users wrong 
-type of inputs. E.g. characters when only digits are expected. Also some input checks can 
-validate unnormal value inputs that won't be expected in real life e.g. an interest rate more 
-than 100. The approach is to make a 'bottleneck' input validation where the user can not input 
-anything except expected values which exclude further bugs while the program usage. This approach
-needs more time for coding but takes less time for further bugs testing. 
-'''
+#-------------------------------------------------------------------------------------------#
+# print program name and instructions
+# request user input 'investment' or 'bond'
+# if 'investment' then ask user input:
+    # money deposit
+    # interest name
+    # years to invest
 
-# the formula inside the program needs math import at the beginning
+    # request user input 'simple' or 'compound'
+    # if 'simple' then calculate total amount using formula [ A = P *(1 + r*t) ]
+    # if 'compound' then calculate total amount using formula [ A = P * math.pow((1 + r), t ) ]
+    
+    # print summary and result of calculations
+
+# if 'bond' then ask user input:
+    # house value
+    # interest rate
+    # months to invest
+
+    # calculate repayment using formula [ repayment = (i * P) / (1 - (1 + i)**(-n)) ]
+
+    # print summary and result of calculations
+#-------------------------------------------------------------------------------------------#
+
+# the formula inside the program needs math import
 import math
 
-print("\ninvestment - to calculate the amount of interest you'll earn on your investment")
-print("bond -       to calculate the amount you'll have to pay on a home loan\n")
+# print program name and instructions 
+print("[Finance Calculator]")
+print("-------------------------------------------------------------------------------")
+print("investment - to calculate the amount of interest you'll earn on your investment")
+print("      bond - to calculate the amount you'll have to pay on a home loan")
+print("-------------------------------------------------------------------------------")
 
 # loop check until the proper type is entered 
 while True:
+    # request input either 'investment' or 'bond', converting input to lower case
     calc = input("Enter either 'investment' or 'bond' from the menu above to proceed: ").lower()
-
+    # check if input is 'investment' or 'bond'
     if calc == "investment" or calc == "bond":
+        # if yes then break the loop
         break
     else:
-        print("> You've done wrong input!")
+        # if not then print error message and return to input
+        print("> Wrong input! You can choose 'investment' or 'bond' only!")
 
+# selecting investment calculations
 if calc == "investment":
     
     # loop check until the proper type is entered 
     while True:
-        # P in formula
+        # (P) request money deposit amount
         money_deposit = input("Enter your current deposit amount of money: ")
-        
-        if money_deposit.isdigit():
-            break
-        else:
-            print("> Wrong input! Please enter a number!")
+        # check if input is a number
+        try: 
+            # try casting the input to float type if customer wants to see pences also
+            money_deposit = float(money_deposit)
+           
+            # check if the number more than 0
+            if money_deposit > 0:
+            # if yes then break the loop
+                break
+            else:
+                # if not then print error message and return to input
+                print("> Wrong input! Please enter a proper number!")
 
-    # final casting to float type    
-    money_deposit = float(money_deposit)
+        except ValueError:
+            # if not then print error message and return to input
+            print("> Wrong input! Please enter a number!")
     
     # loop check until the proper type is entered 
     while True:
-        # r in formula
-        interest_rate_invest = input("Enter your interest rate (in %): ").replace("%", "")
-       
-        if interest_rate_invest.isdigit() and 0 < int(interest_rate_invest) <= 100:
-            break
-        else:
-            print("> Wrong input! Please enter correct number of interest rate!")
+        # request rate of investment, if "%" received then replace it with empty space
+        interest_rate_invest_input = input("Enter your interest rate (in %): ").replace("%", "")
+        
+        # check if inpunt is a number
+        try:
+            # try to cast input to float
+            interest_rate_invest = float(interest_rate_invest_input)
+            # check if the number more than 0
+            if interest_rate_invest > 0:
+                # if yes then break the loop
+                break
+            else:
+                # if not then print error message and return to input
+                print("> Wrong input! Please enter a proper number!")
+        
+        except ValueError:
+            # if not then print error message and return to input
+            print("> Wrong input! Please enter a number!")
 
-    # need to divade value by 100 for further calculations 
-    interest_rate_invest = float(interest_rate_invest) / 100
+    # (r) convert the rate input acording to the formula values
+    interest_rate_invest = interest_rate_invest / 100
 
     while True:
-        # t in formula
+        # (t) request number of years to invest
         investing_years = input("How many years are you planning to invest: ")
-       
-        if investing_years.isdigit() and 0 < int(investing_years) <= 300:
-            break
-        else:
-            print("> Wrong input! Please enter correct number of investing years!")
-
-    # final casting to int type
-    investing_years = int(investing_years)
+        
+        # check if inpunt is a number
+        try:
+            # try to cast input to integer
+            investing_years = int(investing_years)
+            # check if the number more than 0
+            if investing_years > 0:
+                # if yes then break the loop
+                break
+            else:
+                # if not then print error message and return to input
+                print("> Wrong input! Please enter a proper number!")
+        
+        except ValueError:
+            # if not then print error message and return to input
+            print("> Wrong input! Please enter a number!")
 
     #loop check until the proper type is entered 
     while True:
+        # request either 'simple' or 'compound' calculations, converting input to lower case
         interest = input("Enter either your interst is 'simple' or 'compound': ").lower()
-
+        
+        # check if input either 'simple' or 'compound'
         if interest == "simple" or interest == "compound": 
+            # if yes then break the loop
             break
         else:
-            print("> Wrong input! The only 'simple' or 'compound' are acceptable!")
+            # if not then print error message and return to input
+            print("> Wrong input! You can choose 'simple' or 'compound' only!")
     
+    # selecting simple calculations
     if interest == "simple":
 
-        # A in formula | A = P *(1 + r*t) |
+        # (A) calculate total amount using formula | A = P *(1 + r*t) |
         total_amount = money_deposit * (1 + interest_rate_invest * investing_years)
     
-        print(f"\nYour total amount when simple interest will be: {round(total_amount, 2)} pounds.\n")
-    
+    # selecting compound calculations
     elif interest == "compound":
 
-        # A in formula | A = P * math.pow((1 + r), t ) |
+        # (A) calculate total amount using formula | A = P * math.pow((1 + r), t ) |
         total_amount = money_deposit * math.pow((1 + interest_rate_invest), investing_years)
-      
-        print(f"\nYour total amount when compound interest will be: {round(total_amount, 2)} pounds.\n")
+        
+    # print summary and result of calculations
+    print("\nSUMMARY")
+    print("----------------------------------------")
+    print(f"Your deposit........... {money_deposit} pounds")
+    print(f"Interest rate.......... {interest_rate_invest_input} %")
+    print(f"Years to invest........ {investing_years}")
+    print(f"Your interest.......... {interest}")
+    print("----------------------------------------")
+    print(f"Your total amount is... {round(total_amount, 2)} pounds\n")
 
+# selecting bond calculations
 elif calc == "bond":
     
     while True:
-        # P in formula
+        # (P) request input of a house value
         house_value = input("Enter the present value of the house: ")
+        # check if inpunt is a number
+        try:
+            # try to cast input to float
+            house_value = float(house_value)
+           
+            # check if the number more than 0
+            if house_value > 0:
+                # if yes then break the loop
+                break
+            else:
+                # if not then print error message and return to input
+                print("> Wrong input! Please enter a proper number!")
         
-        if house_value.isdigit():
-            break
-        else:
+        except ValueError:
+            # if not then print error message and return to input
             print("> Wrong input! Please enter a number!")
-
-    # final casting to float type
-    house_value = float(house_value)
         
     while True:
-        # i in formula
-        interest_rate_bound = input("Enter the interest rate(in %): ").replace("%", "")
+        # request user input of interest rate
+        interest_rate_bond_input = input("Enter the interest rate(in %): ").replace("%", "")
+        # check if inpunt is a number
+        try: 
+            # try to cast input to float
+            interest_rate_bond = float(interest_rate_bond_input)
+            
+            # check if the number more than 0
+            if interest_rate_bond > 0:
+                # if yes then break the loop
+                break
+            else:
+                # if not then print error message and return to input
+                print("> Wrong input! Please enter a proper number!")
         
-        if interest_rate_bound.isdigit() and 0 < float(interest_rate_bound) <= 100:
-            break
-        else:
-            print("> Wrong input! Please enter correct number of interest rate!")
+        except ValueError:
+            # if not then print error message and return to input
+            print("> Wrong input! Please enter a number!")
     
-    # need to convert value into month value for further calculations
-    interest_rate_bound = (float(interest_rate_bound) / 100) / 12
+    # (i) convert input to month value acording to the formula values
+    interest_rate_bond = (interest_rate_bond / 100) / 12
    
     while True:
-        # n in formula
-        months_number = input("Enter the number of months you plan to take to repay the bond: ")
+        # (n) request input of number of months
+        months_number = input("Enter a number of months to repay the bond: ")
+        # check if inpunt is a number
+        try:
+            # try to cast input to integer
+            months_number = int(months_number)
+            # check if the number more than 0
+            if months_number > 0:
+                # if yes then break the loop
+                break
+            else:
+                # if not then print error message and return to input
+                print("> Wrong input! Please enter a proper number!")
         
-        if months_number.isdigit() and 0 < int(months_number) < 3600:
-            break
-        else:
-            print("> Wrong input! Please enter correct number of months!")
-
-    # final casting to int type
-    months_number = int(months_number)
+        except ValueError:
+            # if not then print error message and return to input
+            print("> Wrong input! Please enter a number!")
     
-    # calculating repayment using formula | repayment = (i * P) / (1 - (1 + i)**(-n)) |
-    repayment = (interest_rate_bound * house_value) / (1 - (1 + interest_rate_bound)**(- months_number))
-
-    print(f"\nYou will have to repay each month: {round(repayment, 2)} pounds.\n")
+    # calculate repayment using formula | repayment = (i * P) / (1 - (1 + i)**(-n)) |
+    repayment = (interest_rate_bond * house_value) / (1 - (1 + interest_rate_bond)**(- months_number))
+    
+    # print summary and result of calculations
+    print("\nSUMMARY")
+    print("----------------------------------------")
+    print(f"Value of the house..... {house_value} pounds")
+    print(f"Interest rate.......... {interest_rate_bond_input} %")
+    print(f"Months to repay........ {months_number}")
+    print("----------------------------------------")
+    print(f"Your repay each month.. {round(repayment, 2)} pounds\n")
