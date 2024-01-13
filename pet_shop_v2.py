@@ -23,6 +23,7 @@ inventory = {
 } # dictionaly of the products in the shop
 
 cart = {} # Create a shopping cart dictionary
+total_price = 0
 
 def inventory_list(): # function to show list of available products in the shop
     print("\nIn stock:")
@@ -30,7 +31,12 @@ def inventory_list(): # function to show list of available products in the shop
         print(f"({item_number}) {item_details['name']} - {item_details['price']}£")
     
 def add_item(): # function to add items to the cart
-    inventory_list()
+    show_cart = input("\nShow products in stock? (y/n): ")
+    if show_cart == "n":
+        pass
+    elif show_cart == "y":
+        inventory_list()
+
     while True: # loop input to add items until 0 is entered
         item_inp = input("\n(+) Item to add (to stop enter 0): ") # get input of the item to add
         try: # check if number is entered, if not show error
@@ -44,7 +50,7 @@ def add_item(): # function to add items to the cart
             break
         
         elif item in inventory: # check if item in inventory list
-            qnt_inp = input(f"How match items of '{inventory[item]['name']}' to add?: ") # request quantity input
+            qnt_inp = input(f"How match items of '{inventory[item]['name']}' to add?: ").replace("-","") # request quantity input
             try: # check if input is a number, if not then show error
                 quant = int(qnt_inp)
             except ValueError:
@@ -61,6 +67,12 @@ def add_item(): # function to add items to the cart
             print("> Wrong input!")
 
 def del_item(): # function to delete items from the cart
+    show_cart = input("\nShow your cart? (y/n): ")
+    if show_cart == "n":
+        pass
+    elif show_cart == "y":
+        view_cart()
+
     while True: # loop function
         if len(cart) == 0: # check if no items added to cart then show message and exit function
             print("\n> Your cart is empty!")
@@ -80,7 +92,7 @@ def del_item(): # function to delete items from the cart
         elif item not in cart: # check if item not in cart then show error message
             print("> No such item in your cart!")
         elif item in cart: # check if item in cart then show name and quantity
-            qnt_inp = input(f"You have {cart[item]['quantity']} items of '{cart[item]['name']}' in cart.\nHow match you want to delete?: ") # request quantity input
+            qnt_inp = input(f"You have {cart[item]['quantity']} item(s) of '{cart[item]['name']}' in cart.\nHow match to delete?: ").replace("-","") # request quantity input
             try: # check if input is a number, if not then show error message
                 quant = int(qnt_inp)
             except ValueError:
@@ -107,8 +119,6 @@ def view_cart(): # function to show the cart
 
 # start of the program
 print("Welcome to PetShop")
-inventory_list() # show list of available products
-
 while True: # loop input of user actions until exit is chosen
     action = input("\n> 'A' to add items\n> 'E' to edit cart\n> 'V' to view cart\n> 'C' to checkout and exit\nSelect your choice: ").upper() # show menu and request user input
     if action == 'A': # add items
@@ -118,7 +128,9 @@ while True: # loop input of user actions until exit is chosen
     elif action == 'V': # view cart
         view_cart()
     elif action == 'C': # checkout and exit
-        print("\nThank you for shoping with us!\nGood-bye!\n")
+        print("\nPayment successfull!")
+        print("Your order is 'Processing' currently.")
+        print("Thank you for shoping with us!\nGood-bye!\n")
         break
 
     else: # check input if wrong then show error message
