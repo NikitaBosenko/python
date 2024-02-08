@@ -86,11 +86,11 @@ for city in destination:
     print(f"{city}. {destination[city]["city"]} (one-way ticket: {destination[city]["flight"]} GBP)")
 print()
 
-city_flight_inp = "Enter city number to fly: "
+city_flight_inp = "Enter the city number for the flight: "
 # Using function to check the input is a number in range 1-3, using 1 to show the "between" message
 city_flight = num_check(city_flight_inp, 1, len(destination), 1)
 
-num_nights_inp = "How much nights to stay?: "
+num_nights_inp = "How many nights to stay in the hotel?: "
 # Checking input is a number in range 1-999 and 0 - do not show "between" mesdsage
 num_nights = num_check(num_nights_inp, 1, 999, 0)
 
@@ -109,7 +109,7 @@ while True:
     else:
         print("> Enter the given prices only!\n")
 
-rental_days_inp = "Enter days to rent a car?: "
+rental_days_inp = "Enter days number to rent a car?: "
 rental_days = num_check(rental_days_inp, 0, num_nights, 1)
 # Check if rental days zero then car price zero too
 if rental_days == 0:
@@ -121,7 +121,7 @@ elif rental_days > 0:
     for price in sorted(cars[city_flight]):
         print(f"{price} GBP")
     while True:
-        car_price_inp = 'Enter price of the car: '
+        car_price_inp = 'Enter the cost of renting a car: '
         car_price = num_check(car_price_inp, 1, 999999, 0)
         # Check if input in the selected list
         if car_price in cars[city_flight]:
@@ -143,13 +143,10 @@ holiday = holiday_cost()
 
 # Print final result: city choice, journey cost, details
 print(f"{'-'*30}\nYour choice: {destination[city_flight]["city"]}")
-print('\nJourney cost:\n')
+print(f"Nights to stay: {num_nights}")
+print(f"Car rental: {rental_days} days")
+print('\nJOURNEY COST:')
 print(f'Flight:\t{plane} GBP')
 print(f'Hotel:\t{hotel} GBP')
 print(f'Car:\t{car} GBP')
 print(f'\nTotal:\t{holiday} GBP\n{'-'*30}')
-
-
-
-
-
