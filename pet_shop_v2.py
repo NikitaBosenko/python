@@ -8,6 +8,7 @@
 # the program handle unexpected inputs and shows error messages
 # added user-friendly interface for better user experience
 #---------------------------------------------------------------------------------------------------#
+from datetime import datetime
 
 inventory = {
     1: {'name': 'Wiskers Cat Food', 'price': 2.99, 'quantity': 0},
@@ -51,7 +52,6 @@ def add_item(): # function to add items to the cart
         
         if item == 0:
             print("Exit 'add to cart'.")
-            view_cart()
             break
         
         elif item in inventory: # check if item in inventory list
@@ -115,10 +115,24 @@ def view_cart(): # function to show the cart
     total_price = 0 # total price counter
     quant_items = 0 # total items counter
     for item_number, item_details in cart.items(): # show list of added items and details
-        print(f"({item_number}) {item_details['name']} - {item_details['quantity']} item(s) / {round(item_details['price'] * item_details['quantity'],2)}£")
+        print(f"({item_number}) {item_details['name']} - {item_details['quantity']} item(s) / {round(item_details['price'] * item_details['quantity'],2)} GBP")
         total_price += item_details['price'] * item_details['quantity'] # count total price using formula and adding it to counter
         quant_items += item_details['quantity'] # count quantity and adding it to counter
-    print(f"Total items: {quant_items}\nTotal price: {round(total_price,2)}£")
+    print(f"Total items: {quant_items}\nTotal price: {round(total_price,2)} GBP")
+
+def write_cart(time): # function to write the cart details
+    user_name = input("Enter your full name: ")
+    address = input("Enter your full address: ")
+    file_name = str(time) +'.txt' 
+    ofile = open(file_name,'w')
+    total_price = 0 # total price counter
+    quant_items = 0 # total items counter
+    for num, item_details in cart.items(): # show list of added items and details
+        ofile.write(f"{item_details['name']} - {item_details['quantity']} item(s) / {round(item_details['price'] * item_details['quantity'],2)} GBP\n")
+        total_price += item_details['price'] * item_details['quantity'] # count total price using formula and adding it to counter
+        quant_items += item_details['quantity'] # count quantity and adding it to counter
+    ofile.write(f"\nTotal items: {quant_items}\nTotal price: {round(total_price,2)} GBP\n\n")
+    ofile.write(f"Customer name: {user_name}\nDelivery address: {address}\n\n")
 
 # start of the program
 print("Welcome to PetShop")
@@ -132,10 +146,15 @@ while True: # loop input of user actions until exit is chosen
     elif action == 'V': # view cart
         view_cart()
     elif action == 'C': # checkout and exit
-        print("\nPayment successfull!")
-        print("Your order is 'Processing' currently.")
-        print("Thank you for shoping with us!\nGood-bye!\n")
-        break
+        date_time = datetime.now()
+        f_dtime = date_time.strftime("%Y-%m-%d_%H-%M-%S")
+        if len(cart.items()) != 0:
+            write_cart(f_dtime)
+            print("Thank you for shoping with us!\nGood-bye!\n")
+            break
+        else:
+            print("Your cart is empty!\nGood-bye!\n")
+            break           
 
     else: # check input if wrong then show error message
         print("> Wrong input!")
