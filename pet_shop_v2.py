@@ -26,27 +26,32 @@ cart = {} # Create a shopping cart dictionary
 total_price = 0
 
 def inventory_list(): # function to show list of available products in the shop
-    print("\nIn stock:")
+    print("In stock:")
     for item_number, item_details in inventory.items():
         print(f"({item_number}) {item_details['name']} - {item_details['price']}£")
+    print()
     
 def add_item(): # function to add items to the cart
-    show_cart = input("\nShow products in stock? (y/n): ")
+    show_cart = input("Show products in stock? (y/n): ")
     if show_cart == "n":
         pass
     elif show_cart == "y":
         inventory_list()
+    else:
+        add_item()
 
     while True: # loop input to add items until 0 is entered
-        item_inp = input("\n(+) Item to add (to stop enter 0): ") # get input of the item to add
+        item_inp = input("(+) Item to add (to stop enter 0): ") # get input of the item to add
         try: # check if number is entered, if not show error
             item = int(item_inp)
         except ValueError:
+            item = 0
             print("> Wrong input!")
-            break  
+            break
         
         if item == 0:
             print("Exit 'add to cart'.")
+            view_cart()
             break
         
         elif item in inventory: # check if item in inventory list
@@ -54,8 +59,9 @@ def add_item(): # function to add items to the cart
             try: # check if input is a number, if not then show error
                 quant = int(qnt_inp)
             except ValueError:
+                quant = 0
                 print("> Wrong input!")
-                break  
+                add_item() 
             
             if item not in cart:  # check if item not in cart then add item record to cart
                 cart[item] = inventory[item].copy()  # Copy the item details to avoid modifying the original inventory
@@ -67,38 +73,35 @@ def add_item(): # function to add items to the cart
             print("> Wrong input!")
 
 def del_item(): # function to delete items from the cart
-    show_cart = input("\nShow your cart? (y/n): ")
-    if show_cart == "n":
-        pass
-    elif show_cart == "y":
-        view_cart()
-
+    item = 0
     while True: # loop function
         if len(cart) == 0: # check if no items added to cart then show message and exit function
-            print("\n> Your cart is empty!")
+            print("> Your cart is empty!")
             break
+        else: 
+            pass
 
         item_inp = input(f"\n(-) Item to delete (to stop enter 0): ") # request item number input to delete
         try: # check if input is a number, if not then error message
             item = int(item_inp)
         except ValueError:
             print("> Wrong input!")
-            break
+            del_item()
         
         if item == 0: # check if 0 entered then exit function
             print("Exit 'cart edit'.")
+            view_cart()
             break
 
         elif item not in cart: # check if item not in cart then show error message
             print("> No such item in your cart!")
         elif item in cart: # check if item in cart then show name and quantity
-            qnt_inp = input(f"You have {cart[item]['quantity']} item(s) of '{cart[item]['name']}' in cart.\nHow match to delete?: ").replace("-","") # request quantity input
+            qnt_inp = input(f"You have {cart[item]['quantity']} item(s) of '{cart[item]['name']}' in cart.\nHow much to delete?: ").replace("-","") # request quantity input
             try: # check if input is a number, if not then show error message
                 quant = int(qnt_inp)
             except ValueError:
                 print("> Wrong input!")
-                break
-
+                
             if cart[item]['quantity'] > 0: # check f quantity of the item more than 0 then minus quantity input
               cart[item]['quantity'] -= quant
               if cart[item]['quantity'] < 1: # check if quantity is less than 1 
@@ -108,7 +111,7 @@ def del_item(): # function to delete items from the cart
             break
 
 def view_cart(): # function to show the cart
-    print("\nShopping Cart:")
+    print("Your shopping Cart:")
     total_price = 0 # total price counter
     quant_items = 0 # total items counter
     for item_number, item_details in cart.items(): # show list of added items and details
@@ -121,6 +124,7 @@ def view_cart(): # function to show the cart
 print("Welcome to PetShop")
 while True: # loop input of user actions until exit is chosen
     action = input("\n> 'A' to add items\n> 'E' to edit cart\n> 'V' to view cart\n> 'C' to checkout and exit\nSelect your choice: ").upper() # show menu and request user input
+    print()
     if action == 'A': # add items
         add_item()
     elif action =='E': # delete items
